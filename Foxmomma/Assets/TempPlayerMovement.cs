@@ -12,6 +12,7 @@ public class TempPlayerMovement : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetAxisRaw("Horizontal") < 0 && Input.GetAxisRaw("Vertical") < 0) ;
+        Vector2 test = (new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical")).normalized);
+        rb.velocity = new Vector3(test.x, 0f, test.y);
 	}
 }
