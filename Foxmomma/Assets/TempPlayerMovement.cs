@@ -9,11 +9,13 @@ public class TempPlayerMovement : MonoBehaviour {
 	void Start () {
         rb = GetComponent<Rigidbody>();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-        Vector2 test = (new Vector2(Input.GetAxisRaw("Horizontal"),Input.GetAxisRaw("Vertical")).normalized);
-        test *= walkSpeed;
-        rb.velocity = new Vector3(test.x, 0f, test.y);
-	}
+
+    // Update is called once per frame
+    void Update() {
+        Vector3 input = (new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized);
+        input *= walkSpeed;
+        Transform cam = transform.Find("CameraAnchor");
+        input = Quaternion.Euler(0, cam.eulerAngles.y, 0) * input;
+        rb.velocity = input;
+    }
 }
