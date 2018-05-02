@@ -273,6 +273,7 @@ GameObject:
   - component: {fileID: 850118403}
   - component: {fileID: 850118402}
   - component: {fileID: 850118401}
+  - component: {fileID: 850118399}
   m_Layer: 0
   m_Name: FoxModel
   m_TagString: Untagged
@@ -280,6 +281,20 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &850118399
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 850118398}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 064240effb2a68944bc6849c661de06a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 10
+  sprintSpeed: 0
+  crouchSpeed: 0
 --- !u!23 &850118401
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -512,8 +527,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 064240effb2a68944bc6849c661de06a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam: {fileID: 1740284455}
-  walkSpeed: 5
+  walkSpeed: 10
   sprintSpeed: 0
   crouchSpeed: 0
 --- !u!54 &1200857874
@@ -544,8 +558,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   crouchToggles: 0
   movementState: 0
+<<<<<<< HEAD
   SprintKey: 0
   CrouchKey: 0
+=======
+  SprintKey: 304
+  CrouchKey: 99
+>>>>>>> origin/master
 --- !u!1 &1333003702
 GameObject:
   m_ObjectHideFlags: 0
