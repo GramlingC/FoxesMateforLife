@@ -6,6 +6,7 @@ public class PlayerPickupFood : MonoBehaviour {
 
   public KeyCode dropKey;
   public KeyCode pickUpKey;
+  public GameObject holder;
   private GameObject held;
   private GameObject pickUpObject;
   private bool holding = false;
@@ -26,8 +27,8 @@ public class PlayerPickupFood : MonoBehaviour {
 	}
 
   void pickUp(GameObject obj) {
-    obj.transform.parent = transform;
-    obj.transform.position = transform.position + transform.forward;
+    obj.transform.parent = holder.transform;
+    obj.transform.position = holder.transform.position + holder.transform.forward;
     holding = true;
     held = obj;
     canPickUp = false;
