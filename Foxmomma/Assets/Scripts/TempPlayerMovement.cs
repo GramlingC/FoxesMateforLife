@@ -38,9 +38,7 @@ public class TempPlayerMovement : MonoBehaviour
             Vector3 tempMovDir = cameraAngle * rawInput;
             tempMovDir.y = 0;
             rb.velocity = tempMovDir * walkSpeed;
-            Quaternion temp = new Quaternion();
-            temp.eulerAngles = new Vector3(0f,  Mathf.Rad2Deg * Mathf.Atan2(-tempMovDir.z, tempMovDir.x), 0f);
-            //.rotation = temp;
+            Quaternion temp = Quaternion.LookRotation(tempMovDir);
             transform.GetChild(0).rotation = temp;
 
             //managing delayed rotation thing
