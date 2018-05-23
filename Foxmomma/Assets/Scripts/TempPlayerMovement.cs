@@ -7,11 +7,13 @@ using UnityEngine;
 public class TempPlayerMovement : MonoBehaviour
 {
     //for setting up local reference to player state
-    private PlayerState pState;
-    private PlayerState.MovementState state;
+    private PlayerState state;
     //camera
     public Transform cam;//all movement is relative to this camera's rotation
+    //inspector defined speeds
     public float walkSpeed, sprintSpeed, crouchSpeed;
+    //dictionary between states and speeds for simple look ups
+    private Dictionary<PlayerState.MovementState, float> speedDict = new Dictionary<PlayerState.MovementState, float>();
     //local ref to rigidbody
     private Rigidbody rb;
     //max angle change per second
@@ -22,8 +24,12 @@ public class TempPlayerMovement : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        state = GetComponent<PlayerState>().movementState;
-        maxStep.eulerAngles = new Vector3(0f, maxAngleChangeFrequency, 0f);
+        state = GetComponent<PlayerState>();
+
+        //filling dict
+        speedDict[PlayerState.MovementState.crouch] = crouchSpeed;
+        speedDict[PlayerState.MovementState.walk] = walkSpeed;
+        speedDict[PlayerState.MovementState.sprint] = sprintSpeed;
     }
 
     // Update is called once per frame
@@ -33,19 +39,15 @@ public class TempPlayerMovement : MonoBehaviour
             
         if (rawInput.magnitude != 0)
         {
+            //create a rotation to represent the y axis rotation of the camera relative to this rotation
             Quaternion cameraAngle = new Quaternion();
             cameraAngle.eulerAngles = new Vector3(0, cam.rotation.eulerAngles.y, 0);
+            //create a vector representing the specified input relative to the given camera angle
             Vector3 tempMovDir = cameraAngle * rawInput;
-            tempMovDir.y = 0;
-            rb.velocity = tempMovDir * walkSpeed;
-            Quaternion temp = Quaternion.LookRotation(tempMovDir);
-            transform.GetChild(0).rotation = temp;
-
-            //managing delayed rotation thing
-            //Quaternion maxRotStep = transform.rotation;
-
-            //determine which way to rotate
-            //maxRotStep *= 
+            //try to rotate from previous frame's rotation to the desired rotation. Can actually rotate less than desired if the given rotation would be faster than the allowed angle change per second.
+            transform.GetChild(0).rotation = Quaternion.RotateTowards(transform.GetChild(0).rotation, Quaternion.LookRotation(tempMovDir), maxAngleChangeFrequency * Time.deltaTime);
+            //sets movement velocity to be forward to the just decided rotation
+            rb.velocity = transform.GetChild(0).forward * speedDict[state.movementState];
         }
     }
 }
