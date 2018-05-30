@@ -20,6 +20,9 @@ public class TempPlayerMovement : MonoBehaviour
     public float maxAngleChangeFrequency;
     private Quaternion maxStep = new Quaternion();
 
+    //this frame's rotation in terms of angles about the y Axis
+    [HideInInspector] public float yAxisRot = 0.0f;
+
     // Use this for initialization
     void Start()
     {
@@ -39,15 +42,27 @@ public class TempPlayerMovement : MonoBehaviour
             
         if (rawInput.magnitude != 0)
         {
+            //cache velocity downward, to preserve gravity
+            float yVel = rb.velocity.y;
             //create a rotation to represent the y axis rotation of the camera relative to this rotation
             Quaternion cameraAngle = new Quaternion();
             cameraAngle.eulerAngles = new Vector3(0, cam.rotation.eulerAngles.y, 0);
             //create a vector representing the specified input relative to the given camera angle
             Vector3 tempMovDir = cameraAngle * rawInput;
+            //will be calling transform.GetChild(0) a few times, so caching its value for efficiency
+            Transform player = transform.GetChild(0);
+            //save the current (soon to be previous y axis rotation) rotation
+            float prevYAxisRot = player.rotation.eulerAngles.y;
             //try to rotate from previous frame's rotation to the desired rotation. Can actually rotate less than desired if the given rotation would be faster than the allowed angle change per second.
-            transform.GetChild(0).rotation = Quaternion.RotateTowards(transform.GetChild(0).rotation, Quaternion.LookRotation(tempMovDir), maxAngleChangeFrequency * Time.deltaTime);
+            player.rotation = Quaternion.RotateTowards(player.rotation, Quaternion.LookRotation(tempMovDir), maxAngleChangeFrequency * Time.deltaTime);
+            //setting public var to save the rotation just decided
+            yAxisRot = player.rotation.eulerAngles.y - prevYAxisRot;
             //sets movement velocity to be forward to the just decided rotation
-            rb.velocity = transform.GetChild(0).forward * speedDict[state.movementState];
+            Vector3 finalVelocity = transform.GetChild(0).forward * speedDict[state.movementState];
+            //replace the 0 in y component of finalVelocity to be the previously saved y value
+            finalVelocity.y = yVel;
+            //with gravity preserved, assign the finalVelocity to the actual velocity of player
+            rb.velocity = finalVelocity;
         }
     }
 }
