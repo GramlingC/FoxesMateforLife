@@ -13,7 +13,7 @@ public class TempPlayerMovement : MonoBehaviour
     //inspector defined speeds
     public float walkSpeed, sprintSpeed, crouchSpeed;
     //dictionary between states and speeds for simple look ups
-    private Dictionary<PlayerState.MovementState, float> speedDict = new Dictionary<PlayerState.MovementState, float>();
+    [HideInInspector] public Dictionary<PlayerState.MovementState, float> speedDict = new Dictionary<PlayerState.MovementState, float>();
     //local ref to rigidbody
     private Rigidbody rb;
     //max angle change per second
