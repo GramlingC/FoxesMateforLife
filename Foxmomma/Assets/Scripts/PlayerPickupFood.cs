@@ -7,6 +7,7 @@ public class PlayerPickupFood : MonoBehaviour {
   public KeyCode dropKey;
   public KeyCode pickUpKey;
   public GameObject holder;
+  public Transform holdPosition;
   private GameObject held;
   private GameObject pickUpObject;
   private bool holding = false;
@@ -30,15 +31,19 @@ public class PlayerPickupFood : MonoBehaviour {
 
   void pickUp(GameObject obj) {
     obj.transform.parent = holder.transform;
-    obj.transform.position = holder.transform.position + holder.transform.forward;
+    obj.transform.position = holdPosition.position;
     holding = true;
     held = obj;
     canPickUp = false;
+    FoodStateController fsc = obj.GetComponent<FoodStateController>();
+    if(fsc!=null)fsc.onPickUp();
   }
 
   void drop(GameObject obj) {
     obj.transform.parent = transform.parent;
     holding = false;
+    FoodStateController fsc = obj.GetComponent<FoodStateController>();
+    if(fsc!=null)fsc.onDrop();
   }
 
   void OnTriggerExit(Collider col) {
