@@ -13,12 +13,12 @@ public class rabbitBehavior : MonoBehaviour
     
    private NavMeshAgent nav;
     private SphereCollider col;
-    private Animator anime;
+    
     GameObject player;
     
     private void Awake()
     {
-        nav = GetComponent<NavMeshAgent>();
+       
         col = GetComponent<SphereCollider>();
         player = GameObject.FindGameObjectWithTag("Player");
 
@@ -27,39 +27,40 @@ public class rabbitBehavior : MonoBehaviour
     // Use this for initialization 
     void Start()
     {
-
+   
     } 
    
 
         //when player enters collider, checks to see if player is infront (in vision range), or is unstealthed (in sound range) 
         private void OnTriggerStay(Collider other)
         {
-            //Debug.Log(player); 
-
+      
 
 
             if (other.gameObject == player)
             {
-                Debug.Log("triggered on player");
                 Seen = false; // false by default  
                               // Create a vector from the enemy to the player and store the angle between it and forward. 
                 Vector3 direction = other.transform.position - transform.position;
                 float angle = Vector3.Angle(direction, transform.forward);
-                if (angle < fieldView * .5f)
-                { // If the angle between forward and where the player is, is less than half the angle of view 
-                    RaycastHit hit;
-                    //if raycast hits something 
-                    if (Physics.Raycast(transform.position, direction.normalized, out hit, col.radius))
+             if (angle < fieldView * .5f)
+             { // If the angle between forward and where the player is, is less than half the angle of view 
+                RaycastHit hit;
+                //if raycast hits something 
+                if (Physics.Raycast(transform.position, direction.normalized, out hit, col.radius))
+                {
+                    //if it hits the player 
+                    if (hit.collider.gameObject == player)
                     {
-                        //if it hits the player 
-                        if (hit.collider.gameObject == player)
-                        {
-                            Seen = true;
-                            Debug.Log("seen");
-                            lastSeenLocation = player.transform.position;
-                        }
+                        Seen = true;
+                        Debug.Log("seen");
+                        lastSeenLocation = player.transform.position;
                     }
                 }
+
+             }
+             
+
             }
         }
 
