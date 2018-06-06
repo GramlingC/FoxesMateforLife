@@ -8,21 +8,29 @@ public class rabbitBehavior : MonoBehaviour
     public float fieldView = 110f;
     public bool Seen;
     public Vector3 lastSeenLocation;
+    public Rigidbody rabbit;
+    public PlayerState foxState;
 
-    // Use this for initialization 
-    
-   private NavMeshAgent nav;
+    private NavMeshAgent nav;
     private SphereCollider col;
     
     GameObject player;
     
     private void Awake()
     {
-       
+        rabbit = GetComponent<Rigidbody>();
         col = GetComponent<SphereCollider>();
         player = GameObject.FindGameObjectWithTag("Player");
+        foxState = player.GetComponent<PlayerState>();
 
-    
+
+
+    }
+
+    private void Update()
+    {
+       
+        
     }
     // Use this for initialization 
     void Start()
@@ -41,10 +49,11 @@ public class rabbitBehavior : MonoBehaviour
             {
                 Seen = false; // false by default  
                               // Create a vector from the enemy to the player and store the angle between it and forward. 
+                  
                 Vector3 direction = other.transform.position - transform.position;
                 float angle = Vector3.Angle(direction, transform.forward);
-             if (angle < fieldView * .5f)
-             { // If the angle between forward and where the player is, is less than half the angle of view 
+            if (angle < fieldView * .5f)
+            { // If the angle between forward and where the player is, is less than half the angle of view 
                 RaycastHit hit;
                 //if raycast hits something 
                 if (Physics.Raycast(transform.position, direction.normalized, out hit, col.radius))
@@ -58,7 +67,14 @@ public class rabbitBehavior : MonoBehaviour
                     }
                 }
 
-             }
+            }
+            else {
+                if (foxState.movementState != PlayerState.MovementState.crouch) {
+                    Seen = true;
+                    Debug.Log("heard");
+                    lastSeenLocation = player.transform.position;
+                }
+            }
              
 
             }
