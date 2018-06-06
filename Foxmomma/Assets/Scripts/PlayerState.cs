@@ -52,7 +52,7 @@ public class PlayerState : MonoBehaviour {
           (!crouchToggles && Input.GetKeyUp(CrouchKey))||
           (crouchToggles && Input.GetKeyDown(CrouchKey))
         ) {
-          movementState = MovementState.sprint;
+          movementState = MovementState.walk;
         }
         break;
     }
